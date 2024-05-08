@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link href="css/style.css" rel="stylesheet" />
+
+    <!-- Load OpenCV.js -->
+    <script
+      async
+      src="https://docs.opencv.org/4.9.0/opencv.js"
+      onload="onOpenCvLoaded()"
+      type="text/javascript"
+    ></script>
+  </head>
+  <body>
+    <video id="live-camera" autoplay></video>
+
+    {% if base64_frame %}
+    <img src="data:image/jpeg;base64,{{ base64_frame }}" />
+    {% endif %}
+    <p>Number of people detected: {{ num_people }}</p>
+    <p>{% if overcrowded %}Overcrowded{% else %}Everything is OK{% endif %}</p>
+    <script>
+      // Function to reload the page after a specified interval (in milliseconds)
+      function reloadPage() {
+        setTimeout(function () {
+          location.reload();
+        }, 5000); // Adjust the interval as needed (e.g., 5000 milliseconds = 5 seconds)
+      }
+
+      // Call the reloadPage function when the document is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        reloadPage();
+      });
+      // Function to execute when OpenCV.js is loaded
+      function onOpenCvLoaded() {
+        navigator.mediaDevices
+          .getUserMedia({ video: true })
+          .then((stream) => {
+            const video = document.getElementById("live-camera");
+            video.srcObject = stream;
+          })
+          .catch((error) => {
+            console.error("Error accessing camera:", error);
+          });
+
+        const video = document.getElementById("live-camera");
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        video.addEventListener("play", () => {
+          setInterval(() => {
+            ctx.drawImage(video, 0, 0);
+            const imageData = ctx.getImageData(
+              0,
+              0,
+              video.videoWidth,
+              video.videoHeight,
+            );
+            const src = cv.matFromImageData(imageData);
+            const dst = new cv.Mat();
+            cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);
+            // Release memory
+            src.delete();
+            dst.delete();
+          }, 100); // Adjust interval based on processing speed and desired frequency
+        });
+
+        function sendCrowdDensityToServer(density) {
+          fetch("/crowd/density/", {
+            method: "POST",
+            body: JSON.stringify({ density }),
+            headers: { "Content-Type": "application/json" },
+          }).then((response) => {
+            if (!response.ok) {
+              console.error("Error sending crowd data:", response.statusText);
+            }
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

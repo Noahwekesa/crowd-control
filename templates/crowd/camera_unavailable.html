@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Loading....</h1>
+    <script>
+      // Function to reload the page after a specified interval (in milliseconds)
+      function reloadPage() {
+        setTimeout(function () {
+          location.reload();
+        }, 5000); // Adjust the interval as needed (e.g., 5000 milliseconds = 5 seconds)
+      }
+
+      // Call the reloadPage function when the document is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        reloadPage();
+      });
+    </script>
+  </body>
+</html>
