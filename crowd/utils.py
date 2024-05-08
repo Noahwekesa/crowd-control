@@ -1,12 +1,9 @@
 import cv2
 
 
-def detect_faces(image_path):
-    # Load the image from the camera
-    image = cv2.imread(image_path)
-
-    # Convert the image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def detect_faces(frame):
+    # Convert the frame to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Use a pre-trained cascade classifier to detect faces
     face_cascade = cv2.CascadeClassifier(
@@ -19,12 +16,9 @@ def detect_faces(image_path):
     return faces
 
 
-def count_people(image_path):
-    # Load the image from the camera
-    image = cv2.imread(image_path)
-
-    # Convert the image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def count_people(frame):
+    # Convert the frame to grayscale
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Use a pre-trained cascade classifier to detect faces
     face_cascade = cv2.CascadeClassifier(
