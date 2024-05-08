@@ -21,12 +21,11 @@ class SMS:
         self.sms = africastalking.SMS
 
     def send(self):
-        "https://api.sandbox.africastalking.com/version1/messaging"
         # Set the numbers you want to send to in international format
         recipients = ["+254721914166", "+254741642501"]
 
         # Set your message
-        message = "Area A is over crowded."
+        message = "Area A is over crowded. Please control the crowd."
 
         # Set your shortCode or senderId
         # sender = "shortCode or senderId"
